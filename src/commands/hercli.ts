@@ -26,13 +26,23 @@ export default class Hercli extends Command {
   }
 
   public async run(): Promise<void> {
-    const s = spinner()
-
     const {args, flags} = await this.parse(Hercli)
-    intro('Welcome to HERCLI-CLI 😎.')
-    console.log(projectType)
-
+    const s = spinner()
     let exit = false
+
+    process.on('SIGINT', () => {
+      console.log('Exiting...')
+      exit = true // Set exit to true to break the loop
+      s.stop() // Stop the spinner if running
+      process.exit()
+    })
+
+    intro('Welcome to HERCLI-CLI 😎.')
+    await select({
+      initialValue: Value.CHATGPT as string,
+      message: 'Pick your favorite project.',
+      options: AI_MODULES,
+    })
 
     do {
       const prompt = (await text({
@@ -61,8 +71,6 @@ export default class Hercli extends Command {
       }
     } while (!exit)
 
-    /// //////////////////////////////////
-
     s.stop('done! 🎉')
   }
 }
@@ -80,8 +88,3 @@ export const AI_MODULES: Module[] = [
     value: Value.GEMINI,
   },
 ]
-const projectType = await select({
-  initialValue: Value.CHATGPT,
-  message: 'Pick your favorite project.',
-  options: AI_MODULES,
-})
