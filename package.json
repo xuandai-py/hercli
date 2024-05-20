@@ -21,6 +21,7 @@
     "@types/mocha": "^10",
     "@types/node": "^18",
     "chai": "^4",
+    "dotenv": "^16.4.5",
     "eslint": "^8",
     "eslint-config-oclif": "^5",
     "eslint-config-oclif-typescript": "^3",
